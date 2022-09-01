@@ -3,12 +3,22 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
 void get_URL(const string &host, const string &path) {
     // Your code here.
-
+    string service = "http";
+    Address address(host,service);
+    TCPSocket socket;
+    socket.connect(address);
+    string request("GET "+path+ " HTTP/1.1\r\n"+"Host: "+host+"\r\n"+"Connection: close\r\n\r\n");
+    socket.write(request);
+    while(!socket.eof()) {
+        cout<<socket.read();
+    }
+    socket.close();
     // You will need to connect to the "http" service on
     // the computer whose name is in the "host" string,
     // then request the URL path given in the "path" string.
